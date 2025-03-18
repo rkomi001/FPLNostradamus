@@ -34,13 +34,3 @@ def fetch_fpl_data():
         }
         player_list.append(player_info)
     return player_list
-
-
-    # Display top 10 players
-    #for player in forwards[:3]:
-        #print(
-            #f"{player['name']} ({player['position']}, {player['team']}): Form {player['form']}, Cost {player['cost']}M")
-
-    #or player in defenders[:3]:
-        #print(
-            #f"{player['name']} ({player['position']}, {player['team']}): Form {player['form']}, Cost {player['cost']}M")
