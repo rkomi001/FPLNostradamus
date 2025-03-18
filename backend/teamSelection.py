@@ -1,4 +1,6 @@
 import pulp as p
+from pulp import LpMaximize, LpProblem, LpVariable, lpSum
+
 
 def build_best_team(player_list):
     player_list = [player for player in player_list if
@@ -11,50 +13,38 @@ def build_best_team(player_list):
     for player in sorted_players:
         position_groups[player["position"]].append(player)
 
-    itb = 100
-    team = []
-    team.extend(position_groups["GKP"][:1])
-    itb = itb - position_groups["GKP"][0]['cost']
+    #Definisanje problema Maksimizacije
 
-    team.extend(position_groups["DEF"][:3])
-    itb = itb - position_groups["DEF"][0]['cost']
-    itb = itb - position_groups["DEF"][1]['cost']
-    itb = itb - position_groups["DEF"][2]['cost']
+    model = LpProblem("model",LpMaximize)
 
-    team.extend(position_groups["MID"][:2])
-    itb = itb - position_groups["MID"][0]['cost']
-    itb = itb - position_groups["MID"][1]['cost']
+    #Upravljacke promenjive
 
-    team.extend(position_groups["FWD"][:1])
+    player_vars = {player["name"]: LpVariable(player["name"], cat="Binary") for player in player_list}
+    #print(player_vars)
 
-    print(round(itb))
+    #Funkcija
+    model += lpSum(player["xPoints"] * player_vars[player["name"]] for player in player_list), "Ukupno poena"
 
-    all_remaining = position_groups["GKP"][1:] + position_groups["DEF"][3:] + position_groups["MID"][3:] + position_groups["FWD"][1:]
+    #Ogranicenja za cenu
+    model += lpSum(player["cost"]*player_vars[player["name"]] for player in player_list)<=100, "Limit budzeta"
 
-    nDEF = 3
-    nMID = 2
-    nFWD = 1
-    remaining = 4
+    #Ogranicenje za ukupan broj igraca
+    model+= lpSum(player_vars[player["name"]] for player in player_list)==11, "Maksimalan broj igraca"
 
-    for player in all_remaining:
-        if remaining > 0:
-            if player["position"] == "GKP":
-                continue  # Skip extra goalkeepers
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "GKP") == 1, "GK_Constraint"
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "DEF") >= 3, "Min_DEF"
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "DEF") <= 5, "Max_DEF"
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "MID") >= 2, "Min_MID"
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "MID") <= 5, "Max_MID"
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "FWD") >= 1, "Min_FWD"
+    model += lpSum(player_vars[player["name"]] for player in player_list if player["position"] == "FWD") <= 3, "Max_FWD"
 
-            elif player["position"] == "DEF" and nDEF < 5:
-                team.append(player)
-                nDEF += 1
-                remaining -= 1
 
-            elif player["position"] == "MID" and nMID < 5:
-                team.append(player)
-                nMID += 1
-                remaining -= 1
+    #print(model)
 
-            elif player["position"] == "FWD" and nFWD < 3:
-                team.append(player)
-                nFWD += 1
-                remaining -= 1
+    model.solve()
+
+    team = [player for player in player_list if player_vars[player["name"]].value()==1]
 
     print("\n🏆 Best Fantasy Team of the Week 🏆")
     for player in team:
