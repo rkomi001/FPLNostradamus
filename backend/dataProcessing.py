@@ -29,7 +29,7 @@ def fetch_fpl_data():
         "ppg": player["points_per_game"],
         "cost": player["now_cost"]/10,
         "total_points": player["total_points"],
-        "xPoints": round(float(player["total_points"])/100+float(player["form"]),2)
+        "xPoints": float(player["form"])
 
         }
         player_list.append(player_info)
