@@ -1,0 +1,67 @@
+.football-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: green;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+}
+
+/* Row styles */
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Common player styling */
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 100px;
+  background-color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Position-specific styles */
+.goalkeeper {
+  background-color: yellow;
+}
+
+.defender {
+  background-color: lightblue;
+}
+
+.midfielder {
+  background-color: orange;
+}
+
+.forward {
+  background-color: red;
+}
+
+/* Name and xPoints */
+.player .name {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.player .xPoints {
+  font-size: 10px;
+  color: gray;
+  margin-top: 5px;
+}
