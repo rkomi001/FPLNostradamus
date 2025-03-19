@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     // Fetch the player data from the backend API
-    fetch('http://localhost:5000/best_team') // Adjust the API URL accordingly
+    fetch('http://localhost:5000/my_team') // Adjust the API URL accordingly
       .then(response => response.json())
       .then(data => setPlayers(data))
       .catch(error => console.error('Error fetching players:', error));
