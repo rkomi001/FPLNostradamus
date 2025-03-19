@@ -1,5 +1,7 @@
 import requests
 
+from dataProcessing import fetch_fpl_data
+
 
 def fetch_my_team():
     session = requests.session()
@@ -18,5 +20,16 @@ def fetch_my_team():
     res = session.get(team_url)
     data = res.json()  # Convert response to JSON
     team = data["picks"]  # Now access the "picks" key
+
+    players = fetch_fpl_data()
+
+    player_dict = {p["id"]: p for p in players}
+    for selected_player in team:
+        player_id = selected_player["element"]
+
+        if player_id in player_dict:
+            selected_player.update(player_dict[player_id])
+
+
 
     return team

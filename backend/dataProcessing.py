@@ -22,6 +22,7 @@ def fetch_fpl_data():
     player_list = []
     for player in players:
         player_info = {
+        "id": player["id"],
         "name": player["first_name"]+" "+player["second_name"],
         "team": teams[player["team"]],
         "position": positions[player["element_type"]],
@@ -30,7 +31,6 @@ def fetch_fpl_data():
         "cost": player["now_cost"]/10,
         "total_points": player["total_points"],
         "xPoints": float(player["form"])
-
         }
         player_list.append(player_info)
     return player_list
